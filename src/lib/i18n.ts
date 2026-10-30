@@ -44,6 +44,11 @@ export const copy = {
     topic: "Tema da trilha",
     topicPlaceholder:
       "Ex.: Transformada de Fourier, recursão, cálculo de integrais…",
+    promptLabel: "O que a trilha precisa responder?",
+    promptHint:
+      "Inclua dúvidas, objetivos ou um recorte. O pesquisador usará isso para enriquecer a investigação.",
+    promptPlaceholder:
+      "Ex.: Compare métodos, explique por que funciona, mostre erros comuns e termine com um exemplo em Python…",
     level: "Nível",
     beginner: "Iniciante",
     intermediate: "Intermediário",
@@ -143,6 +148,11 @@ export const copy = {
       "Combine a topic with your materials. Agents turn everything into a visual, step-by-step lesson.",
     topic: "Trail topic",
     topicPlaceholder: "E.g.: Fourier transform, recursion, integration…",
+    promptLabel: "What should the trail answer?",
+    promptHint:
+      "Add questions, goals or a particular angle. The researcher will use them to enrich the investigation.",
+    promptPlaceholder:
+      "E.g.: Compare methods, explain why it works, cover common mistakes and finish with a Python example…",
     level: "Level",
     beginner: "Beginner",
     intermediate: "Intermediate",

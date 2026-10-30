@@ -1,0 +1,13 @@
+.prompt-field {
+  margin-top: 15px;
+}
+.prompt-input {
+  font-size: 12px;
+  min-height: 84px;
+}
+.prompt-hint {
+  margin: 6px 0 0;
+  font-size: 9px;
+  line-height: 1.5;
+  color: var(--faint);
+}

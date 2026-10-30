@@ -34,6 +34,7 @@ export default function NewTrailDialog({
   t,
 }: Props) {
   const [topic, setTopic] = useState("");
+  const [userPrompt, setUserPrompt] = useState("");
   const [level, setLevel] = useState<
     "iniciante" | "intermediario" | "avancado"
   >("iniciante");
@@ -45,7 +46,7 @@ export default function NewTrailDialog({
   const utils = trpc.useUtils();
   const sourcesQuery = trpc.sources.list.useQuery(
     { workspaceId },
-    { enabled: open },
+    { enabled: open }
   );
   const upload = trpc.sources.uploadPdf.useMutation();
   const addUrl = trpc.sources.addUrl.useMutation();
@@ -69,7 +70,7 @@ export default function NewTrailDialog({
 
   const busy = upload.isPending || addUrl.isPending;
   const ingestDone = async (id: string) => {
-    setSelected((prev) => new Set(prev).add(id));
+    setSelected(prev => new Set(prev).add(id));
     setError("");
     await utils.sources.list.invalidate({ workspaceId });
   };
@@ -80,13 +81,13 @@ export default function NewTrailDialog({
       !file.name.toLowerCase().endsWith(".pdf")
     ) {
       setError(
-        language === "pt" ? "Selecione um arquivo PDF." : "Choose a PDF file.",
+        language === "pt" ? "Selecione um arquivo PDF." : "Choose a PDF file."
       );
       return;
     }
     if (file.size > 12 * 1024 * 1024) {
       setError(
-        language === "pt" ? "O PDF excede 12 MB." : "The PDF exceeds 12 MB.",
+        language === "pt" ? "O PDF excede 12 MB." : "The PDF exceeds 12 MB."
       );
       return;
     }
@@ -124,12 +125,14 @@ export default function NewTrailDialog({
       const result = await generate.mutateAsync({
         workspaceId,
         topic: topic.trim(),
+        userPrompt: userPrompt.trim(),
         language: contentLanguage,
         level,
         sourceIds: [...selected],
       });
       onCreated(result.lesson);
       setTopic("");
+      setUserPrompt("");
       setSelected(new Set());
       onClose();
     } catch (e) {
@@ -146,7 +149,7 @@ export default function NewTrailDialog({
   return (
     <div
       className="modal-backdrop"
-      onMouseDown={(e) => {
+      onMouseDown={e => {
         if (e.target === e.currentTarget && !generate.isPending) onClose();
       }}
     >
@@ -205,18 +208,33 @@ export default function NewTrailDialog({
                 id="trail-topic"
                 className="topic-input"
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={e => setTopic(e.target.value)}
                 placeholder={t.topicPlaceholder}
                 rows={2}
                 maxLength={180}
                 autoFocus
               />
+              <div className="prompt-field">
+                <label className="field-label" htmlFor="trail-prompt">
+                  {t.promptLabel} <em>{t.optional}</em>
+                </label>
+                <textarea
+                  id="trail-prompt"
+                  className="topic-input prompt-input"
+                  value={userPrompt}
+                  onChange={e => setUserPrompt(e.target.value)}
+                  placeholder={t.promptPlaceholder}
+                  rows={3}
+                  maxLength={3000}
+                />
+                <p className="prompt-hint">{t.promptHint}</p>
+              </div>
               <div className="form-pair">
                 <label>
                   <span className="field-label">{t.level}</span>
                   <select
                     value={level}
-                    onChange={(e) => setLevel(e.target.value as typeof level)}
+                    onChange={e => setLevel(e.target.value as typeof level)}
                   >
                     <option value="iniciante">{t.beginner}</option>
                     <option value="intermediario">{t.intermediate}</option>
@@ -227,7 +245,7 @@ export default function NewTrailDialog({
                   <span className="field-label">{t.contentLanguage}</span>
                   <select
                     value={contentLanguage}
-                    onChange={(e) =>
+                    onChange={e =>
                       setContentLanguage(e.target.value as Language)
                     }
                   >
@@ -257,15 +275,15 @@ export default function NewTrailDialog({
                   type="file"
                   accept="application/pdf,.pdf"
                   hidden
-                  onChange={(e) => handleFile(e.target.files?.[0])}
+                  onChange={e => handleFile(e.target.files?.[0])}
                 />
                 <div className="url-zone">
                   <div>
                     <Globe2 size={18} />
                     <input
                       value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      onKeyDown={(e) => {
+                      onChange={e => setUrl(e.target.value)}
+                      onKeyDown={e => {
                         if (e.key === "Enter") handleUrl();
                       }}
                       placeholder={t.urlPlaceholder}
@@ -289,12 +307,12 @@ export default function NewTrailDialog({
                 {(sourcesQuery.data?.length ?? 0) === 0 ? (
                   <p className="empty-source">{t.noSource}</p>
                 ) : (
-                  sourcesQuery.data?.map((source) => (
+                  sourcesQuery.data?.map(source => (
                     <button
                       key={source.id}
                       className={`source-chip ${selected.has(source.id) ? "selected" : ""}`}
                       onClick={() =>
-                        setSelected((prev) => {
+                        setSelected(prev => {
                           const next = new Set(prev);
                           if (next.has(source.id)) next.delete(source.id);
                           else if (next.size < 6) next.add(source.id);
