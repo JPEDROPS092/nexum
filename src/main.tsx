@@ -9,5 +9,9 @@ import "./styles/kit.css";
 import "./styles/app.css";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode><TRPCProvider><App /></TRPCProvider></StrictMode>,
+  <StrictMode>
+    <TRPCProvider>
+      <App />
+    </TRPCProvider>
+  </StrictMode>,
 );
