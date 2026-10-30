@@ -15,12 +15,12 @@ export const elementSchema = z.discriminatedUnion("type", [
   z.object({ ...base, type: z.literal("axes"), xLabel: z.string().optional(), yLabel: z.string().optional(), grid: z.boolean().optional() }),
   z.object({ ...base, type: z.literal("function"), expression: z.string(), variable: z.string().optional(), samples: z.number().int().min(20).max(500).optional(), dash: z.array(z.number()).optional() }),
   z.object({ ...base, type: z.literal("point"), x: z.number(), y: z.number(), xExpression: z.string().optional(), yExpression: z.string().optional(), label: z.string().optional(), radius: z.number().optional() }),
-  z.object({ ...base, type: z.literal("line"), from: z.tuple([z.number(), z.number()]), to: z.tuple([z.number(), z.number()]), dash: z.array(z.number()).optional(), label: z.string().optional() }),
+  z.object({ ...base, type: z.literal("line"), from: z.array(z.number()).length(2), to: z.array(z.number()).length(2), dash: z.array(z.number()).optional(), label: z.string().optional() }),
   z.object({ ...base, type: z.literal("vector"), x: z.number(), y: z.number(), dx: z.number(), dy: z.number(), label: z.string().optional() }),
   z.object({ ...base, type: z.literal("circle"), x: z.number(), y: z.number(), radius: z.number(), fill: z.boolean().optional() }),
   z.object({ ...base, type: z.literal("bar"), x: z.number(), height: z.number(), width: z.number().optional(), label: z.string().optional(), state: z.enum(["default", "active", "done", "muted"]).optional() }),
   z.object({ ...base, type: z.literal("text"), x: z.number(), y: z.number(), text: z.string(), size: z.number().optional(), align: z.enum(["left", "center", "right"]).optional() }),
-  z.object({ ...base, type: z.literal("path"), points: z.array(z.tuple([z.number(), z.number()])).min(2), closed: z.boolean().optional(), fill: z.boolean().optional() }),
+  z.object({ ...base, type: z.literal("path"), points: z.array(z.array(z.number()).length(2)).min(2), closed: z.boolean().optional(), fill: z.boolean().optional() }),
 ]);
 
 export const sceneSchema = z.object({
