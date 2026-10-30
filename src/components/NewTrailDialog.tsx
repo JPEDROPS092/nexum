@@ -84,22 +84,23 @@ export default function NewTrailDialog({
       );
       return;
     }
-    if (file.size > 12 * 1024 * 1024) {
+    if (file.size > 120 * 1024 * 1024) {
       setError(
-        language === "pt" ? "O PDF excede 12 MB." : "The PDF exceeds 12 MB.",
+        language === "pt" ? "O PDF excede 120 MB." : "The PDF exceeds 120 MB.",
       );
       return;
     }
     try {
-      const data = new Uint8Array(await file.arrayBuffer());
-      let binary = "";
-      const chunk = 0x8000;
-      for (let i = 0; i < data.length; i += chunk)
-        binary += String.fromCharCode(...data.subarray(i, i + chunk));
+      const contentBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
       const result = await upload.mutateAsync({
         workspaceId,
         name: file.name,
-        contentBase64: btoa(binary),
+        contentBase64,
       });
       await ingestDone(result.id);
     } catch (e) {

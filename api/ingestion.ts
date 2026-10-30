@@ -4,7 +4,7 @@ import { lookup } from "node:dns/promises";
 import net from "node:net";
 import { TRPCError } from "@trpc/server";
 
-const MAX_BYTES = 12 * 1024 * 1024;
+const MAX_BYTES = 120 * 1024 * 1024;
 const MAX_CHARS = 120_000;
 
 export function cleanText(value: string) {
@@ -18,7 +18,7 @@ export async function extractPdf(data: Uint8Array) {
     const text = cleanText(Array.isArray(result.text) ? result.text.join("\n\n") : result.text);
     if (text.length < 30) throw new Error("PDF sem texto extraível. Se for digitalizado, aplique OCR antes de enviar.");
     return text;
-  } finally { await parser.destroy(); }
+  } finally { await (parser as { destroy?: () => Promise<void> }).destroy?.(); }
 }
 
 function privateIp(ip: string) {
@@ -41,9 +41,9 @@ async function assertPublicUrl(raw: string) {
 
 async function readLimited(response: Response) {
   const length = Number(response.headers.get("content-length") || 0);
-  if (length > MAX_BYTES) throw new Error("O documento excede o limite de 12 MB.");
+  if (length > MAX_BYTES) throw new Error("O documento excede o limite de 120 MB.");
   const buffer = new Uint8Array(await response.arrayBuffer());
-  if (buffer.byteLength > MAX_BYTES) throw new Error("O documento excede o limite de 12 MB.");
+  if (buffer.byteLength > MAX_BYTES) throw new Error("O documento excede o limite de 120 MB.");
   return buffer;
 }
 
