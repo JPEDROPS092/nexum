@@ -1,5 +1,4 @@
 import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { generateObject } from "ai";
 import { z } from "zod";
 import {
@@ -7,7 +6,8 @@ import {
   languageSchema,
   levelSchema,
 } from "@contracts/lesson";
-import { classifyAiError, listModels } from "../ai-client";
+import { classifyAiError } from "../ai-client";
+import { getModel } from "../lib/llm";
 
 const researchSchema = z.object({
   summary: z.string(),
@@ -60,15 +60,7 @@ export interface GenerateInput {
 }
 
 export async function runLearningPipeline(input: GenerateInput) {
-  const { defaultModelId } = await listModels();
-  const provider = createOpenAICompatible({
-    name: "kimi-gw",
-    baseURL: process.env.KIMI_AGENTGW_BASE_URL!,
-    apiKey: process.env.KIMI_AGENTGW_API_KEY!,
-    includeUsage: true,
-    supportsStructuredOutputs: true,
-  });
-  const model = provider(defaultModelId);
+  const { model, modelId: defaultModelId } = await getModel();
   const locale = input.language === "pt" ? "português do Brasil" : "English";
   const sourceText = input.sources.length
     ? input.sources

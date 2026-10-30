@@ -1,2 +1,2 @@
-import { defineRelations } from "drizzle-orm";
-export const relations = defineRelations({}, () => ({}));
+// Sem relações declaradas por enquanto (drizzle-orm 0.45 não exporta defineRelations).
+export {};
