@@ -12,6 +12,27 @@ npm run dev
 
 O servidor de desenvolvimento abre em `http://localhost:3000`. As variáveis de ambiente do banco e do gateway de IA ficam somente no servidor; nunca devem ser expostas no código do navegador.
 
+Copie `.env.example` para `.env` e preencha os valores locais:
+
+```dotenv
+# Aplicação
+APP_ID=your-app-id
+APP_SECRET=replace-with-a-long-random-secret
+VITE_APP_ID=your-app-id
+
+# Banco MySQL
+DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DATABASE
+
+# Gateway OpenAI-compatible — somente no servidor
+KIMI_AGENTGW_BASE_URL=https://your-openai-compatible-gateway.example.com/v1
+KIMI_AGENTGW_API_KEY=your-server-side-api-key
+
+# Opcional: recursos da plataforma
+KIMI_STORAGE_RESOURCE_ID=your-storage-resource-id
+```
+
+O `.env` real é ignorado pelo Git. Não o envie para o repositório.
+
 ```bash
 npm run check   # verificação TypeScript
 npm run build   # frontend + servidor de produção
