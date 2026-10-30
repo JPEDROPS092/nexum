@@ -7,11 +7,12 @@ import App from "./App";
 import { TRPCProvider } from "@/providers/trpc";
 import "./styles/kit.css";
 import "./styles/app.css";
+import "./styles/prompt.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TRPCProvider>
       <App />
     </TRPCProvider>
-  </StrictMode>,
+  </StrictMode>
 );
