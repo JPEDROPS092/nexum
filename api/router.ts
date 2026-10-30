@@ -12,10 +12,10 @@ import { listModels } from "./ai-client";
 
 const workspace = z.string().min(8).max(64);
 const sourceRouter = createRouter({
-  uploadPdf: publicQuery.input(z.object({ workspaceId: workspace, name: z.string().min(1).max(180), contentBase64: z.string().max(17_000_000) })).mutation(async ({ input }) => {
+  uploadPdf: publicQuery.input(z.object({ workspaceId: workspace, name: z.string().min(1).max(180), contentBase64: z.string().max(164_000_000) })).mutation(async ({ input }) => {
     try {
       const bytes = Uint8Array.from(Buffer.from(input.contentBase64, "base64"));
-      if (bytes.length > 30 * 1024 * 1024) throw new Error("O PDF excede o limite de 30 MB.");
+      if (bytes.length > 120 * 1024 * 1024) throw new Error("O PDF excede o limite de 120 MB.");
       const content = await extractPdf(bytes);
       const item = { id: randomUUID(), workspaceId: input.workspaceId, kind: "pdf", name: input.name.replace(/[\u0000-\u001f]/g, ""), content, charCount: content.length };
       await getDb().insert(sources).values(item);
