@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: nexum
+      MYSQL_DATABASE: nexum
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pnexum"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      target: build
+    command: npx drizzle-kit push --force
+    environment:
+      DATABASE_URL: mysql://root:nexum@db:3306/nexum
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-3001}:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: mysql://root:nexum@db:3306/nexum
+      APP_ID: ${APP_ID:-nexum}
+      APP_SECRET: ${APP_SECRET:-change-me-in-dotenv}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  db-data:
