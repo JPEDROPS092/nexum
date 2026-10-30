@@ -84,9 +84,9 @@ export default function NewTrailDialog({
       );
       return;
     }
-    if (file.size > 12 * 1024 * 1024) {
+    if (file.size > 30 * 1024 * 1024) {
       setError(
-        language === "pt" ? "O PDF excede 12 MB." : "The PDF exceeds 12 MB.",
+        language === "pt" ? "O PDF excede 30 MB." : "The PDF exceeds 30 MB.",
       );
       return;
     }
